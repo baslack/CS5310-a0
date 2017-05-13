@@ -11,8 +11,9 @@
 #include <chrono>
 #include <cmath>
 #include "sorts.h"
-#define ITERATIONS 5000
+#define ITERATIONS 10000
 #define SEED 2891569
+#define N_OF_INTEREST 10
 
 using namespace std;
 
@@ -22,6 +23,15 @@ int generateTest(vector<int> &test, int n);
 void dumpTest(vector<int> &test);
 
 int main(int argc, char **argv) {
+    //allow for a change of seed
+    int in_seed;
+    if (argc > 1){
+        in_seed = atoi(argv[1]);
+    }else{
+        in_seed = SEED;
+    }
+    srand(in_seed);
+
     //setup dump file
     ofstream outfile;
     outfile.open("a0.csv", ios::trunc);
@@ -31,11 +41,12 @@ int main(int argc, char **argv) {
     }
 
     // set the various n's we're going to sort
-    vector<int> n = {10, 20, 40, 80, 160, 320, 640, 1280};
+    vector<int> n = {2, 4, 8, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
     vector<int>::iterator n_iter = n.begin();
 
     //declare a general test var
     vector<int> test;
+    vector<int> clone;
 
     //declare our timer variables
     using namespace std::chrono;
@@ -63,27 +74,32 @@ int main(int argc, char **argv) {
         //zero out the totals and averages from the last pass
         running_total = running_total.zero();
         average = average.zero();
+        //generate a random list
+        if (generateTest(test, *n_iter) < 0){
+            cerr << "Something has gone horribly wrong!\n";
+            exit(-1);
+        }
         //iterate the following
         for (int i = 0; i < ITERATIONS; i++){
-            //generate a random list
-            if (generateTest(test, *n_iter) < 0){
-                cerr << "Something has gone horribly wrong!\n";
-                exit(-1);
+            //need to work on a copy so...
+            clone.clear();
+            for (int i = 0; i < test.size(); i++){
+                clone.push_back(test[i]);
             }
             //for the lower n's output the pre and post lists
             //for confirmation that sort's doing what we want
-            if ((*n_iter < 100) && (i == 0)){
-                dumpTest(test);
+            if ((*n_iter == N_OF_INTEREST) && (i == 0)){
+                dumpTest(clone);
             }
             //start the timer
             start_time = clock::now();
             //sort the list
-            sorts::selectionSort(test);
+            sorts::selectionSort(clone);
             //stop the timer
             end_time = clock::now();
             //dump the sorted list if needed
-            if ((*n_iter < 100) && (i == 0)){
-                dumpTest(test);
+            if ((*n_iter == N_OF_INTEREST) && (i == 0)){
+                dumpTest(clone);
             }
             //calculate the delta T
             delta = duration_cast<ns>(end_time - start_time);
@@ -119,7 +135,6 @@ int main(int argc, char **argv) {
  * @return 0 on success, -1 on failure
  */
 int generateTest(vector<int> &test, int n){
-    srand(SEED);
     try{
         test.clear();
         for (int i = 0; i < n; i++){
