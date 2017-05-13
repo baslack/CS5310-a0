@@ -18,7 +18,7 @@ namespace sorts{
         //if the vector has less than
         //two, we've nothing to do
         if (v.size() < 2){
-            return 0;
+            return -1;
         }
         //start with an unsorted list
         int sorted_index = 0;
@@ -37,13 +37,22 @@ namespace sorts{
                 //next element
                 index++;
             }
-            //swap
-            int temp;
-            temp = v[sorted_index];
-            v[sorted_index] = v[smallest_index];
-            v[smallest_index] = temp;
+
+            //if the smallest is already at the base
+            //no need to swap
+            if (sorted_index != smallest_index){
+                //swap
+                int temp;
+                temp = v[sorted_index];
+                v[sorted_index] = v[smallest_index];
+                v[smallest_index] = temp;
+            }
+
             //increment the sorted
             sorted_index++;
+            //set the smallest at the start of the next run
+            smallest_index = sorted_index;
+            //aet the start of the compares next to that
             index = sorted_index + 1;
         }
         return 0;
