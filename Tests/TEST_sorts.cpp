@@ -1,6 +1,11 @@
 /**
- *  g test main
+ * Benjamin A. Slack
+ * CS5310, Summer 1 2017
+ * a0, Selection Sort
+ * 05.13.17
+ * benjamin.slack@wmich.edu
  */
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../sorts.h"

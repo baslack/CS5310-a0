@@ -1,6 +1,10 @@
-//
-// Created by iam on 5/10/2017.
-//
+/**
+ * Benjamin A. Slack
+ * CS5310, Summer 1 2017
+ * a0, Selection Sort
+ * 05.13.17
+ * benjamin.slack@wmich.edu
+ */
 
 #ifndef A0_SORTS_H
 #define A0_SORTS_H
